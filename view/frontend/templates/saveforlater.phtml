@@ -1,0 +1,94 @@
+<?php $saveForLater = $block->getSaveForLaterData(); ?>
+
+<div id="saveforlater-container">
+    <div class="listing-section">
+        <div class="messages" style="margin-top: 10px;display: none; color: green;" id="success-messages">
+            <div data-ui-id="checkout-cart-validationmessages-message-success"></div>
+        </div>
+        <?php foreach ($saveForLater as $saveForLaterData) : ?>
+            <div class="product">
+                <?php $product = $block->getProductDataUsingId($saveForLaterData->getProductId()); ?>
+                <div class="image-box">
+                    <img src="<?= $block->escapeUrl($product['image']); ?>" alt="<?= $block->escapeHtml($product['name']); ?>">
+                </div>
+                <div class="text-box">
+                    <h2 class="item"><?= $block->escapeHtml($product['name']); ?></h2>
+                    <h3 class="price"><?= $block->escapeHtml($product['formatted_price']); ?></h3>
+                    <label for="item-quantity">Quantity:</label>
+                    <input type="text" name="item-quantity" class="item-quantity" value="<?= $block->escapeHtml($saveForLaterData->getQty()); ?>">
+                    <input type="hidden" class="product-id" value="<?= $product['id']; ?>">
+                    <button type="button" class="cart-action add-item">Add to Cart</button>
+                    <button type="button" class="cart-action remove-item">Remove</button>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<script>
+    document.getElementById('saveforlater-container').addEventListener('click', function(event) {
+        if (event.target.classList.contains('cart-action')) {
+            var action = event.target.classList.contains('add-item') ? 'add' : 'remove';
+            var productId = event.target.parentNode.querySelector('.product-id').value;
+            var quantity = event.target.parentNode.querySelector('.item-quantity').value;
+            var formurl = '<?php echo $this->getUrl('clearcart/cart/addtocart'); ?>';
+            var messageType = action === 'add' ? 'Adding to cart...' : 'Removing from cart...';
+
+            var loader = document.createElement('div');
+            loader.innerHTML = messageType + ' <i class="fa fa-spinner fa-spin"></i>';
+            loader.style.display = 'inline-block';
+            loader.style.marginLeft = '10px';
+            event.target.parentNode.insertBefore(loader, event.target.nextSibling);
+
+            jQuery.ajax({
+                type: "POST",
+                url: formurl,
+                data: {
+                    action: action,
+                    product_id: productId,
+                    quantity: action === 'add' ? quantity : 0 // Send 0 or null for quantity when removing
+                },
+                success: function(transport) {
+                    console.log(transport.message);
+                    require('Magento_Customer/js/customer-data').reload();
+                    loader.style.display = 'none';
+                    refreshSaveForLaterBlock();
+                    showMessage(transport.message);
+                },
+                error: function() {
+                    loader.style.display = 'none';
+                    console.log('Error ' + (action === 'add' ? 'adding' : 'removing') + ' product from cart.');
+                }
+            });
+        }
+    });
+
+    function refreshSaveForLaterBlock() {
+        var saveForLaterContainer = document.getElementById('saveforlater-container');
+        var url = '<?php echo $block->getUrl('clearcart/index/refreshBlock'); ?>';
+
+        jQuery.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (!response.error) {
+                    saveForLaterContainer.innerHTML = response.html;
+                } else {
+                    console.log('Error: ' + response.message);
+                }
+            },
+            error: function() {
+                console.log('Error refreshing SaveForLater block.');
+            }
+        });
+    }
+
+    function showMessage(message) {
+        jQuery('#success-messages').text(message).show();
+        setTimeout(function() {
+            jQuery('#success-messages').fadeOut('slow');
+        }, 3000);
+    }
+
+</script>

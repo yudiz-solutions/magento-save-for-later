@@ -1,0 +1,15 @@
+{
+    "save_for_later": {
+        "column": {
+            "entity_id": true,
+            "user_id": true,
+            "product_id": true,
+            "qty": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
