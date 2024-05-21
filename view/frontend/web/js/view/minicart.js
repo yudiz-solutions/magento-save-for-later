@@ -4,8 +4,9 @@ define([
     'Magento_Ui/js/modal/alert',
     'Magento_Ui/js/modal/confirm',
     'Magento_Ui/js/model/messageList',
-    'Magento_Customer/js/customer-data'
-], function ($, Component, alert, confirm, messageList, customerData) {
+    'Magento_Customer/js/customer-data',
+    "swal",
+], function ($, Component, alert, confirm, messageList, customerData, Swal) {
     'use strict';
 
     return Component.extend({
@@ -52,23 +53,22 @@ define([
                 }
             }).done(function (response) {
                 if (!response.errors) {
-                    // Display success message in a centered popup
-                    alert({
-                        title: $.mage.__('Save For Later'),
-                        content: $.mage.__('Products are moved to Save For Later.'),
-                        modalClass: 'centered-popup',
-                        actions: {
-                            always: function () {
-                                console.log('Success popup closed.');
-                            }
-                        }
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Products are moved to Save For Later.",
+                        showConfirmButton: false,
+                        timer: 3000,
                     });
                 } else {
                     var msg = response.message;
                     if (msg) {
-                        alert({
-                            content: msg,
-                            modalClass: 'centered-popup'
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "error",
+                            title: msg,
+                            showConfirmButton: false,
+                            timer: 3000,
                         });
                     }
                 }
