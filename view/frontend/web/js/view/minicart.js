@@ -10,11 +10,7 @@ define([
     'use strict';
 
     return Component.extend({
-        initialize: function () {
-            this._super();
-            this.isLoggedInCustomer();
-        },
-
+   
         isLoggedInCustomer: function () {
             console.log("initi");
             var customer = customerData.get('customer')();
