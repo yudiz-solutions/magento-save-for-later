@@ -41,6 +41,7 @@ define([
                 url: href,
                 type: 'post',
                 dataType: 'json',
+                showLoader: true,
                 beforeSend: function () {
                     $(elem).attr('disabled', 'disabled');
                 },
@@ -49,6 +50,7 @@ define([
                 }
             }).done(function (response) {
                 if (!response.errors) {
+                    $('body').trigger('processStop');
                     Swal.fire({
                         position: "top-end",
                         icon: "success",

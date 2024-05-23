@@ -64,7 +64,7 @@ class SaveForLater extends Template
     {
         // get param values
         $page = ($this->getRequest()->getParam('p')) ? $this->getRequest()->getParam('p') : 1;
-        $pageSize = ($this->getRequest()->getParam('limit')) ? $this->getRequest()->getParam('limit') : 5; // set minimum records
+        $pageSize = ($this->getRequest()->getParam('limit')) ? $this->getRequest()->getParam('limit') : 6; // set minimum records
         // get custom collection
         $customerId = $this->customerSession->getCustomer()->getId();
         $collections = $this->collection->create();
@@ -77,7 +77,7 @@ class SaveForLater extends Template
     public function getPagerCount()
     {
         // get collection
-        $minimum_show = 5; // set minimum records
+        $minimum_show = 6; // set minimum records
         $page_array = [];
         $list_data = $this->collection->create();
         $list_count = ceil(count($list_data->getData()));
@@ -114,5 +114,16 @@ class SaveForLater extends Template
     public function getFormattedPrice($price)
     {
         return $this->priceHelper->currency($price, true, false);
+    }
+
+    public function getProductUrl($productId)
+    {
+        $product = $this->productrepository->getById($productId);
+        return $product->getProductUrl();
+    }
+    
+    public function getLoadMoreUrl()
+    {
+        return $this->getUrl('saveforlater/customer/loadmore');
     }
 }

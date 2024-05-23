@@ -1,94 +1,304 @@
 <?php $saveForLater = $block->getSaveForLaterData(); ?>
 
+<style>
+    #saveforlater-container {
+        padding: 20px;
+    }
+
+    .savelater-listing-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .savelater-messages {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .savelater-product {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s;
+        width: calc(33.333% - 20px);
+        box-sizing: border-box;
+    }
+
+    .savelater-product:hover {
+        transform: translateY(-5px);
+    }
+
+    .savelater-image-box {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .savelater-image-box img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .savelater-text-box {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .savelater-item {
+        font-size: 1.2em;
+        margin: 10px 0;
+    }
+
+    .savelater-price {
+        color: #000;
+        font-size: 1.1em;
+        margin: 10px 0;
+    }
+
+    .savelater-text-box label {
+        display: block;
+        margin: 10px 0 5px;
+        font-size: 0.9em;
+    }
+
+    .savelater-item-quantity {
+        width: 50px !important;
+        padding: 5px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .savelater-cart-action {
+        background: #1979c3;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        margin: 5px 0;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .savelater-cart-action:hover {
+        background: #0056b3;
+        color: #fff;
+    }
+
+    .savelater-remove-item {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .savelater-remove-item:hover {
+        background: #c82333;
+        color: #fff;
+    }
+
+    @media (max-width: 768px) {
+        .savelater-product {
+            width: calc(50% - 20px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .savelater-product {
+            width: 100%;
+        }
+
+        .savelater-item {
+            font-size: 1em;
+        }
+
+        .savelater-price {
+            font-size: 0.9em;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .quantity-btn {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .savelater-item-quantity {
+            width: 50px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+    }
+</style>
+
+
 <div id="saveforlater-container">
-    <div class="listing-section">
-        <div class="messages" style="margin-top: 10px;display: none; color: green;" id="success-messages">
+    <div class="savelater-listing-section">
+        <div class="savelater-messages" style="margin-top: 10px;display: none; color: green;" id="savelater-success-messages">
             <div data-ui-id="checkout-cart-validationmessages-message-success"></div>
         </div>
-        <?php foreach ($saveForLater as $saveForLaterData) : ?>
-            <div class="product">
+        <?php
+        foreach ($saveForLater as $saveForLaterData) : ?>
+            <div class="savelater-product">
                 <?php $product = $block->getProductDataUsingId($saveForLaterData->getProductId()); ?>
-                <div class="image-box">
-                    <img src="<?= $block->escapeUrl($product['image']); ?>" alt="<?= $block->escapeHtml($product['name']); ?>">
+                <div class="savelater-image-box">
+                    <a href="<?= $block->getProductUrl($product['id']); ?>">
+                        <img src="<?= $block->escapeUrl($product['image']); ?>" alt="<?= $block->escapeHtml($product['name']); ?>">
+                    </a>
                 </div>
-                <div class="text-box">
-                    <h2 class="item"><?= $block->escapeHtml($product['name']); ?></h2>
-                    <h3 class="price"><?= $block->escapeHtml($product['formatted_price']); ?></h3>
-                    <label for="item-quantity">Quantity:</label>
-                    <input type="text" name="item-quantity" class="item-quantity" value="<?= $block->escapeHtml($saveForLaterData->getQty()); ?>">
-                    <input type="hidden" class="product-id" value="<?= $product['id']; ?>">
-                    <button type="button" class="cart-action add-item">Add to Cart</button>
-                    <button type="button" class="cart-action remove-item">Remove</button>
+                <div class="savelater-text-box">
+                    <h2 class="savelater-item"><?= $block->escapeHtml($product['name']); ?></h2>
+                    <h3 class="savelater-price"><?= $block->escapeHtml($product['formatted_price']); ?></h3>
+                    <label for="savelater-item-quantity-<?= $product['id']; ?>">Quantity:</label>
+                    <div class="quantity-controls">
+                        <button type="button" class="quantity-btn decrease">-</button>
+                        <input type="text" id="savelater-item-quantity-<?= $product['id']; ?>" name="item-quantity" class="savelater-item-quantity" value="<?= $block->escapeHtml($saveForLaterData->getQty()); ?>" />
+                        <button type="button" class="quantity-btn increase">+</button>
+                    </div>
+                    <input type="hidden" class="savelater-product-id" value="<?= $product['id']; ?>">
+                    <button type="button" class="savelater-cart-action savelater-add-item">Add to Cart</button>
+                    <button type="button" class="savelater-cart-action savelater-remove-item">Remove</button>
                 </div>
             </div>
         <?php endforeach; ?>
+
+        <div id="savelater-load-more">
+            <img src="<?php echo $block->getViewFileUrl('images/loader.gif'); ?>" alt="Loading..." style="display: none;" />
+        </div>
     </div>
 </div>
 
 <script>
-    document.getElementById('saveforlater-container').addEventListener('click', function(event) {
-        if (event.target.classList.contains('cart-action')) {
-            var action = event.target.classList.contains('add-item') ? 'add' : 'remove';
-            var productId = event.target.parentNode.querySelector('.product-id').value;
-            var quantity = event.target.parentNode.querySelector('.item-quantity').value;
-            var formurl = '<?php echo $this->getUrl('clearcart/cart/addtocart'); ?>';
-            var messageType = action === 'add' ? 'Adding to cart...' : 'Removing from cart...';
+    require(['jquery', 'swal'], function($, Swal) {
+        $(document).ready(function() {
+            document.getElementById('saveforlater-container').addEventListener('click', function(event) {
+                if (event.target.classList.contains('savelater-cart-action')) {
+                    var action = event.target.classList.contains('savelater-add-item') ? 'add' : 'remove';
+                    var productId = event.target.parentNode.querySelector('.savelater-product-id').value;
+                    var quantity = event.target.parentNode.querySelector('.savelater-item-quantity').value;
+                    var formurl = '<?php echo $this->getUrl('saveforlater/cart/addtocart'); ?>';
+                    var messageType = action === 'add' ? 'Adding to cart...' : 'Removing from cart...';
 
-            var loader = document.createElement('div');
-            loader.innerHTML = messageType + ' <i class="fa fa-spinner fa-spin"></i>';
-            loader.style.display = 'inline-block';
-            loader.style.marginLeft = '10px';
-            event.target.parentNode.insertBefore(loader, event.target.nextSibling);
+                    jQuery.ajax({
+                        type: "POST",
+                        url: formurl,
+                        showLoader: true,
+                        data: {
+                            action: action,
+                            product_id: productId,
+                            quantity: action === 'add' ? quantity : 0 // Send 0 or null for quantity when removing
+                        },
+                        success: function(transport) {
+                            $('body').trigger('processStop');
+                            if (transport.success == true) {
+                                require('Magento_Customer/js/customer-data').reload();
+                                showMessage(transport.message);
+                                //this product removed from save for later
+                                event.target.closest('.savelater-product').remove();
 
-            jQuery.ajax({
-                type: "POST",
-                url: formurl,
+                            } else if (transport.errors) {
+                                Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'warning',
+                                    title: transport.message,
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                })
+                            }
+                        },
+                        error: function() {
+                            $('body').trigger('processStop');
+                            console.log('Error ' + (action === 'add' ? 'adding' : 'removing') + ' product from cart.');
+                        }
+                    });
+                }
+            });
+
+            function showMessage(message) {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: message,
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+            }
+
+            $('.quantity-controls').each(function() {
+                var $control = $(this);
+                var $decreaseBtn = $control.find('.decrease');
+                var $increaseBtn = $control.find('.increase');
+                var $quantityInput = $control.find('.savelater-item-quantity');
+
+                $decreaseBtn.on('click', function() {
+                    var currentValue = parseInt($quantityInput.val(), 10);
+                    if (currentValue > 1) {
+                        $quantityInput.val(currentValue - 1);
+                    }
+                });
+
+                $increaseBtn.on('click', function() {
+                    var currentValue = parseInt($quantityInput.val(), 10);
+                    $quantityInput.val(currentValue + 1);
+                });
+            });
+
+        });
+    });
+    require(['jquery'], function($) {
+        var currentPage = 1;
+        var isLoading = false;
+
+        $(window).scroll(function() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                if (!isLoading) {
+                    isLoading = true;
+                    currentPage++;
+                    loadMoreProducts(currentPage);
+                }
+            }
+        });
+
+        function loadMoreProducts(page) {
+            $.ajax({
+                url: '<?php echo $this->getUrl('saveforlater/customer/loadmore'); ?>',
+                type: 'POST',
                 data: {
-                    action: action,
-                    product_id: productId,
-                    quantity: action === 'add' ? quantity : 0 // Send 0 or null for quantity when removing
+                    page: page
                 },
-                success: function(transport) {
-                    console.log(transport.message);
-                    require('Magento_Customer/js/customer-data').reload();
-                    loader.style.display = 'none';
-                    refreshSaveForLaterBlock();
-                    showMessage(transport.message);
+                beforeSend: function() {
+                    $('#savelater-load-more img').show();
                 },
-                error: function() {
-                    loader.style.display = 'none';
-                    console.log('Error ' + (action === 'add' ? 'adding' : 'removing') + ' product from cart.');
+                success: function(response) {
+                    if (response.success) {
+                        $('#savelater-product-container').append(response.html);
+                        isLoading = false;
+                        if (!response.hasMoreData) {
+                            $(window).off('scroll');
+                            $('#savelater-load-more').hide();
+                        }
+                    }
+                },
+                complete: function() {
+                    $('#savelater-load-more img').hide();
                 }
             });
         }
     });
-
-    function refreshSaveForLaterBlock() {
-        var saveForLaterContainer = document.getElementById('saveforlater-container');
-        var url = '<?php echo $block->getUrl('clearcart/index/refreshBlock'); ?>';
-
-        jQuery.ajax({
-            url: url,
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (!response.error) {
-                    saveForLaterContainer.innerHTML = response.html;
-                } else {
-                    console.log('Error: ' + response.message);
-                }
-            },
-            error: function() {
-                console.log('Error refreshing SaveForLater block.');
-            }
-        });
-    }
-
-    function showMessage(message) {
-        jQuery('#success-messages').text(message).show();
-        setTimeout(function() {
-            jQuery('#success-messages').fadeOut('slow');
-        }, 3000);
-    }
-
 </script>

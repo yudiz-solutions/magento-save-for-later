@@ -1,0 +1,51 @@
+<?php
+/** @var \Yudiz\SaveForLater\Block\SaveForLater $block */
+$saveForLaterCollection = $block->getSaveForLaterCollection();
+?>
+
+<?php foreach ($saveForLaterCollection as $saveForLaterData): ?>
+    <div class="savelater-product">
+        <?php $product = $block->getProductDataUsingId($saveForLaterData->getProductId()); ?>
+        <div class="savelater-image-box">
+            <img src="<?= $block->escapeUrl($product['image']); ?>" alt="<?= $block->escapeHtml($product['name']); ?>">
+        </div>
+        <div class="savelater-text-box">
+            <h2 class="savelater-item"><?= $block->escapeHtml($product['name']); ?></h2>
+            <h3 class="savelater-price"><?= $block->escapeHtml($product['formatted_price']); ?></h3>
+            <label for="savelater-item-quantity-<?= $product['id']; ?>">Quantity:</label>
+            <div class="quantity-controls">
+                <button type="button" class="quantity-btn decrease">-</button>
+                <input type="text" id="savelater-item-quantity-<?= $product['id']; ?>" name="item-quantity" class="savelater-item-quantity" value="<?= $block->escapeHtml($saveForLaterData->getQty()); ?>" />
+                <button type="button" class="quantity-btn increase">+</button>
+            </div>
+            <input type="hidden" class="savelater-product-id" value="<?= $product['id']; ?>">
+            <button type="button" class="savelater-cart-action savelater-add-item">Add to Cart</button>
+            <button type="button" class="savelater-cart-action savelater-remove-item">Remove</button>
+        </div>
+    </div>
+<?php endforeach; ?>
+
+<script>
+    require(['jquery', 'swal'], function($, Swal) {
+        $(document).ready(function() {
+            $('.quantity-controls').each(function() {
+                var $control = $(this);
+                var $decreaseBtn = $control.find('.decrease');
+                var $increaseBtn = $control.find('.increase');
+                var $quantityInput = $control.find('.savelater-item-quantity');
+
+                $decreaseBtn.on('click', function() {
+                    var currentValue = parseInt($quantityInput.val(), 10);
+                    if (currentValue > 1) {
+                        $quantityInput.val(currentValue - 1);
+                    }
+                });
+
+                $increaseBtn.on('click', function() {
+                    var currentValue = parseInt($quantityInput.val(), 10);
+                    $quantityInput.val(currentValue + 1);
+                });
+            });
+        });
+    });
+</script>
