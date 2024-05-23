@@ -25,6 +25,9 @@
         transition: transform 0.3s;
         width: calc(33.333% - 20px);
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .savelater-product:hover {
@@ -50,6 +53,8 @@
     .savelater-item {
         font-size: 1.2em;
         margin: 10px 0;
+        justify-content: center;
+        align-items: center;
     }
 
     .savelater-price {
@@ -95,6 +100,20 @@
     .savelater-remove-item:hover {
         background: #c82333;
         color: #fff;
+    }
+
+    #savelater-load-more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        width: 100%;
+    }
+
+    #savelater-load-more img {
+        margin-right: 10px;
+        width: 30px;
+        height: 30px;
     }
 
     @media (max-width: 768px) {
@@ -161,9 +180,9 @@
                     <a href="<?= $block->getProductUrl($product['id']); ?>">
                         <img src="<?= $block->escapeUrl($product['image']); ?>" alt="<?= $block->escapeHtml($product['name']); ?>">
                     </a>
+                    <h2 class="savelater-item"><?= $block->escapeHtml($product['name']); ?></h2>
                 </div>
                 <div class="savelater-text-box">
-                    <h2 class="savelater-item"><?= $block->escapeHtml($product['name']); ?></h2>
                     <h3 class="savelater-price"><?= $block->escapeHtml($product['formatted_price']); ?></h3>
                     <label for="savelater-item-quantity-<?= $product['id']; ?>">Quantity:</label>
                     <div class="quantity-controls">
@@ -177,11 +196,12 @@
                 </div>
             </div>
         <?php endforeach; ?>
-
-        <div id="savelater-load-more">
-            <img src="<?php echo $block->getViewFileUrl('images/loader.gif'); ?>" alt="Loading..." style="display: none;" />
-        </div>
     </div>
+    <div id="savelater-load-more" style="display: none;">
+        <img src="/pub/static/frontend/Magento/luma/en_US/images/loader-1.gif" alt="Loading..." />
+        <span>Loading...</span>
+    </div>
+
 </div>
 
 <script>
@@ -268,14 +288,15 @@
         $(window).scroll(function() {
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
                 if (!isLoading) {
-                    isLoading = true;
-                    currentPage++;
+                    currentPage++; // Increment the current page
                     loadMoreProducts(currentPage);
                 }
             }
         });
 
         function loadMoreProducts(page) {
+            isLoading = true;
+
             $.ajax({
                 url: '<?php echo $this->getUrl('saveforlater/customer/loadmore'); ?>',
                 type: 'POST',
@@ -283,11 +304,12 @@
                     page: page
                 },
                 beforeSend: function() {
-                    $('#savelater-load-more img').show();
+                    $('#savelater-load-more').show();
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#savelater-product-container').append(response.html);
+                        var newProducts = $(response.html).filter('.savelater-product');
+                        $('.savelater-listing-section').append(newProducts);
                         isLoading = false;
                         if (!response.hasMoreData) {
                             $(window).off('scroll');
@@ -296,7 +318,7 @@
                     }
                 },
                 complete: function() {
-                    $('#savelater-load-more img').hide();
+                    $('#savelater-load-more').hide();
                 }
             });
         }

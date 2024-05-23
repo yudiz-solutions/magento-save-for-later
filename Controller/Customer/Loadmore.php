@@ -32,8 +32,6 @@ class Loadmore extends Action
 
     public function execute()
     {
-
-        die('test');
         $currentPage = (int)$this->getRequest()->getParam('page', 1);
         $pageSize = 6; // Or any other page size you want
 
@@ -61,8 +59,14 @@ class Loadmore extends Action
         $customerId = $this->customerSession->getCustomerId();
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('user_id', $customerId);
+
+        // Calculate the offset based on the current page and page size
+        $offset = ($currentPage - 1) * $pageSize;
+
         $collection->setPageSize($pageSize);
         $collection->setCurPage($currentPage);
+        $collection->getSelect()->limit($pageSize, $offset);
+
         return $collection;
     }
 }
