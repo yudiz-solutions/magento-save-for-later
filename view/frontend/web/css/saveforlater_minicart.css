@@ -1,0 +1,18 @@
+#empty-minicart {
+    background: #1979c3;
+    border: 1px solid #1979c3;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#empty-minicart:hover {
+    background: #ffffff;
+    color: #1979c3;
+}
+.secondary.empty-cart-button {
+    text-align: center;
+}
