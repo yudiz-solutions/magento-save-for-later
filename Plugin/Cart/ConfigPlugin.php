@@ -30,7 +30,7 @@ class ConfigPlugin
         \Magento\Checkout\Block\Cart\Sidebar $subject,
         array $result
     ) {
-        $result['emptyMiniCart'] = $this->url->getUrl('clearcart/cart/emptycart');
+        $result['emptyMiniCart'] = $this->url->getUrl('saveforlater/cart/emptycart');
         return $result;
     }
 }

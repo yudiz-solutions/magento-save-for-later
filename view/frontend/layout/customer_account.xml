@@ -4,7 +4,7 @@
         <referenceBlock name="customer_account_navigation">
             <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-custom-tab">
                 <arguments>
-                    <argument name="path" xsi:type="string">clearcart/customer/index</argument>
+                    <argument name="path" xsi:type="string">saveforlater/customer/index</argument>
                     <argument name="label" xsi:type="string">Save For Later</argument>
                 </arguments>
             </block>
