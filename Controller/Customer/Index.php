@@ -1,4 +1,18 @@
 <?php
+
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
 namespace Yudiz\SaveForLater\Controller\Customer;
 
 use Magento\Framework\App\Action\Action;
@@ -10,17 +24,41 @@ use Magento\Framework\Message\ManagerInterface;
 
 class Index extends Action
 {
+    /**
+     * @var PageFactory
+     */
     protected $resultPageFactory;
+
+    /**
+     * @var CustomerSession
+     */
     protected $customerSession;
+
+    /**
+     * @var RedirectFactory
+     */
     protected $resultRedirectFactory;
+
+    /**
+     * @var ManagerInterface
+     */
     protected $messageManager;
 
+    /**
+     * Index constructor.
+     *
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     * @param CustomerSession $customerSession
+     * @param RedirectFactory $resultRedirectFactory
+     * @param ManagerInterface $messageManager
+     */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
         CustomerSession $customerSession,
         RedirectFactory $resultRedirectFactory,
-        ManagerInterface $messageManager,
+        ManagerInterface $messageManager
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
@@ -29,6 +67,11 @@ class Index extends Action
         $this->messageManager = $messageManager;
     }
 
+    /**
+     * Execute action
+     *
+     * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         // Check if the customer is logged in

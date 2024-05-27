@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
 namespace Yudiz\SaveForLater\Controller\Cart;
 
 use Magento\CatalogInventory\Model\Stock\StockItemRepository;
@@ -17,13 +30,21 @@ use Psr\Log\LoggerInterface;
 use Yudiz\SaveForLater\Model\ResourceModel\SaveForLater\CollectionFactory;
 use Yudiz\SaveForLater\Model\SaveForLaterFactory;
 
-class AddToCart extends Action
+class ManageCart extends Action
 {
     /**
      * @var Session
      */
     protected $checkoutSession;
+
+    /**
+     * @var FormKey
+     */
     protected $formKey;
+
+    /**
+     * @var StockItemRepository
+     */
     protected $stockItemRepository;
 
     /**
@@ -41,25 +62,62 @@ class AddToCart extends Action
      */
     protected $logger;
 
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
     protected $customerSession;
 
     /**
-     * @var Magento\Checkout\Model\Cart
+     * @var \Magento\Checkout\Model\Cart
      */
     protected $cart;
-    protected $quote;
-    protected $cartRep;
-    protected $productFactory;
-    protected $request;
-    protected $saveForLaterFactory;
-    protected $collectionFactory;
+
     /**
-     * EmptyCart constructor.
+     * @var QuoteFactory
+     */
+    protected $quote;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected $cartRep;
+
+    /**
+     * @var ProductFactory
+     */
+    protected $productFactory;
+
+    /**
+     * @var Http
+     */
+    protected $request;
+
+    /**
+     * @var SaveForLaterFactory
+     */
+    protected $saveForLaterFactory;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $collectionFactory;
+
+    /**
+     * ManageCart constructor.
      *
      * @param Context $context
-     * @param Session $session
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param JsonFactory $jsonFactory
+     * @param StockItemRepository $stockItemRepository
+     * @param CollectionFactory $collectionFactory
+     * @param SaveForLaterFactory $saveForLaterFactory
+     * @param FormKey $formKey
+     * @param ProductFactory $productFactory
+     * @param Http $request
+     * @param QuoteFactory $quote
+     * @param CartRepositoryInterface $cartRap
      * @param Data $jsonHelper
+     * @param \Magento\Checkout\Model\Cart $cart
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -77,7 +135,6 @@ class AddToCart extends Action
         Data $jsonHelper,
         \Magento\Checkout\Model\Cart $cart,
         LoggerInterface $logger
-
     ) {
         $this->customerSession = $customerSession;
         $this->jsonFactory = $jsonFactory;
@@ -97,7 +154,6 @@ class AddToCart extends Action
 
     /**
      * Ajax execute
-     *
      */
     public function execute()
     {
@@ -113,30 +169,40 @@ class AddToCart extends Action
             try {
                 $product = $this->productFactory->create()->load($productId);
                 $stockItem = $this->stockItemRepository->get($productId);
-                // Get the existing quantity of the product in the cart
-                $existingQty = $this->getExistingQty($productId);
-                $totalRequestedQty = $requestedQty + $existingQty;
-                // Check if the total requested quantity is available
-                if ($stockItem->getQty() < $totalRequestedQty) {
+
+                // Check if the product is out of stock
+                if (!$product->isSalable() || $stockItem->getIsInStock() == 0) {
                     $response = [
                         'errors' => true,
-                        'message' => __('The requested qty is not available'),
+                        'message' => __('Product is out of stock.'),
                     ];
                 } else {
-                    $params = array(
-                        'form_key' => $this->formKey->getFormKey(),
-                        'product' => $productId,
-                        'qty' => $requestedQty,
-                    );
-                    $this->cart->addProduct($product, $params);
-                    $this->cart->save();
-                    // Delete the product from the save for later list
-                    $this->deleteProductId($productId);
 
-                    $response = [
-                        'success' => true,
-                        'message' => __('Product added to cart successfully.'),
-                    ];
+                    // Get the existing quantity of the product in the cart
+                    $existingQty = $this->getExistingQty($productId);
+                    $totalRequestedQty = $requestedQty + $existingQty;
+                    // Check if the total requested quantity is available
+                    if ($stockItem->getQty() < $totalRequestedQty) {
+                        $response = [
+                            'errors' => true,
+                            'message' => __('The requested qty is not available.'),
+                        ];
+                    } else {
+                        $params = [
+                            'form_key' => $this->formKey->getFormKey(),
+                            'product' => $productId,
+                            'qty' => $requestedQty,
+                        ];
+                        $this->cart->addProduct($product, $params);
+                        $this->cart->save();
+                        // Delete the product from the save for later list
+                        $this->deleteProductId($productId);
+
+                        $response = [
+                            'success' => true,
+                            'message' => __('Product added to cart successfully.'),
+                        ];
+                    }
                 }
             } catch (\Exception $e) {
                 $response = [
@@ -167,6 +233,12 @@ class AddToCart extends Action
         return $resultJson->setData($response);
     }
 
+    /**
+     * Get existing quantity of a product in the cart
+     *
+     * @param int $productId
+     * @return int
+     */
     private function getExistingQty(int $productId): int
     {
         $existingQty = 0;
@@ -183,17 +255,25 @@ class AddToCart extends Action
         return $existingQty;
     }
 
-    public function deleteProductId($productId)
+    /**
+     * Delete product ID from save for later
+     *
+     * @param int $productId
+     * @return bool
+     */
+    public function deleteProductId(int $productId): bool
     {
         // Check if product exists in save for later
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('product_id', $productId);
         $collection->addFieldToFilter('user_id', $this->customerSession->getCustomerId());
+
         if ($collection->getSize() > 0) {
             $saveForLater = $collection->getFirstItem();
             $saveForLater->delete();
             return true;
         }
+
         return false;
     }
 }

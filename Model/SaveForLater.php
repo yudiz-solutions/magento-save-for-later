@@ -1,4 +1,18 @@
 <?php
+
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
 namespace Yudiz\SaveForLater\Model;
 
 use Yudiz\SaveForLater\Api\Data\SaveForLaterInterface;
@@ -10,7 +24,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * CMS page cache tag.
      */
-    const CACHE_TAG = 'yudiz_saveforlater';
+    public const CACHE_TAG = 'yudiz_saveforlater';
 
     /**
      * @var string
@@ -35,7 +49,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * Get ID.
      *
-     * @return int
+     * @return int|null
      */
     public function getId()
     {
@@ -44,6 +58,9 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
 
     /**
      * Set ID.
+     *
+     * @param int $id
+     * @return $this
      */
     public function setId($id)
     {
@@ -53,7 +70,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * Get User ID.
      *
-     * @return int
+     * @return int|null
      */
     public function getUserId()
     {
@@ -62,6 +79,9 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
 
     /**
      * Set User ID.
+     *
+     * @param int $userId
+     * @return $this
      */
     public function setUserId($userId)
     {
@@ -71,7 +91,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * Get Product ID.
      *
-     * @return int
+     * @return int|null
      */
     public function getProductId()
     {
@@ -80,6 +100,9 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
 
     /**
      * Set Product ID.
+     *
+     * @param int $productId
+     * @return $this
      */
     public function setProductId($productId)
     {
@@ -89,7 +112,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * Get Quantity.
      *
-     * @return int
+     * @return int|null
      */
     public function getQty()
     {
@@ -98,6 +121,9 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
 
     /**
      * Set Quantity.
+     *
+     * @param int $qty
+     * @return $this
      */
     public function setQty($qty)
     {
@@ -107,7 +133,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * Get Created At.
      *
-     * @return string
+     * @return string|null
      */
     public function getCreatedAt()
     {
@@ -116,6 +142,9 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
 
     /**
      * Set Created At.
+     *
+     * @param string $createdAt
+     * @return $this
      */
     public function setCreatedAt($createdAt)
     {
@@ -125,7 +154,7 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
     /**
      * Get Updated At.
      *
-     * @return string
+     * @return string|null
      */
     public function getUpdatedAt()
     {
@@ -134,6 +163,9 @@ class SaveForLater extends AbstractModel implements SaveForLaterInterface
 
     /**
      * Set Updated At.
+     *
+     * @param string $updatedAt
+     * @return $this
      */
     public function setUpdatedAt($updatedAt)
     {

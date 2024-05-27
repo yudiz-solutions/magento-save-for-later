@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
 namespace Yudiz\SaveForLater\Plugin\Cart;
 
 use Magento\Framework\UrlInterface;
@@ -13,7 +26,8 @@ class ConfigPlugin
 
     /**
      * ConfigPlugin constructor.
-     * @param UrlInterface $url
+     *
+     * @param UrlInterface $url The URL interface
      */
     public function __construct(
         UrlInterface $url
@@ -22,8 +36,10 @@ class ConfigPlugin
     }
 
     /**
-     * @param \Magento\Checkout\Block\Cart\Sidebar $subject
-     * @param array $result
+     * After get config
+     *
+     * @param \Magento\Checkout\Block\Cart\Sidebar $subject The sidebar block
+     * @param array $result The result array
      * @return array
      */
     public function afterGetConfig(

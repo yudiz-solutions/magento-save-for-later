@@ -1,3 +1,16 @@
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+ 
 #saveforlater-container {
     padding: 20px;
 }
@@ -40,6 +53,7 @@
     width: 100%;
     height: auto;
     display: block;
+    margin-bottom: 10px;
 }
 
 .savelater-text-box {
@@ -51,6 +65,7 @@
     font-size: 1.2em;
     margin: 10px 0;
     text-align: center;
+    margin: 10px 5px;
 }
 
 .savelater-price {

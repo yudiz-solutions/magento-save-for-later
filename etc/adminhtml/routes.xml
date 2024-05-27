@@ -12,8 +12,10 @@
  * @copyright   Copyright (c) 2024 Yudiz (https://www.Yudiz.com/)
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Checkout\Block\Cart\Sidebar">
-        <plugin name="empty_cart_url" type="Yudiz\SaveForLater\Plugin\Cart\ConfigPlugin" sortOrder="20" />
-    </type>
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="saveforlater" frontName="saveforlater">
+            <module name="Yudiz_SaveForLater" />
+        </route>
+    </router>
 </config>

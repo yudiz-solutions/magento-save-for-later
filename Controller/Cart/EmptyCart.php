@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
 namespace Yudiz\SaveForLater\Controller\Cart;
 
 use Magento\Checkout\Model\Session;
@@ -33,22 +46,36 @@ class EmptyCart extends Action
      */
     protected $logger;
 
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
     protected $customerSession;
 
     /**
-     * @var Magento\Checkout\Model\Cart
+     * @var \Magento\Checkout\Model\CartFactory
+     */
+    protected $cart;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $collectionFactory;
+
+    /**
+     * @var SaveForLaterFactory
      */
     protected $saveForLaterFactory;
-    protected $cart;
-    protected $collectionFactory;
 
     /**
      * EmptyCart constructor.
      *
      * @param Context $context
-     * @param Session $session
+     * @param CollectionFactory $collectionFactory
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param JsonFactory $jsonFactory
+     * @param SaveForLaterFactory $saveForLaterFactory
      * @param Data $jsonHelper
+     * @param \Magento\Checkout\Model\CartFactory $cart
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -60,27 +87,25 @@ class EmptyCart extends Action
         Data $jsonHelper,
         \Magento\Checkout\Model\CartFactory $cart,
         LoggerInterface $logger
-
     ) {
         $this->collectionFactory = $collectionFactory;
         $this->customerSession = $customerSession;
         $this->jsonFactory = $jsonFactory;
-        $this->jsonHelper = $jsonHelper;
         $this->saveForLaterFactory = $saveForLaterFactory;
-        $this->logger = $logger;
+        $this->jsonHelper = $jsonHelper;
         $this->cart = $cart;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
     /**
      * Ajax execute
-     *
      */
     public function execute()
     {
         $cartObject = $this->cart->create();
         $items = $cartObject->getItems();
-        if(!empty($items)){
+        if (!empty($items)) {
             foreach ($items as $item) {
                 if ($this->getProductExists($item->getProductId(), $item->getQty()) == true) {
                     continue;
@@ -112,6 +137,13 @@ class EmptyCart extends Action
         $resultJson = $this->jsonFactory->create();
         return $resultJson->setData($response);
     }
+
+    /**
+     * Store product in Save For Later
+     *
+     * @param int $product_id
+     * @param int $qty
+     */
     public function storeSaveForLater($product_id, $qty)
     {
         $saveForLater = $this->saveForLaterFactory->create();
@@ -120,6 +152,14 @@ class EmptyCart extends Action
         $saveForLater->setQty($qty);
         $saveForLater->save();
     }
+
+    /**
+     * Check if product exists in Save For Later
+     *
+     * @param int $product_id
+     * @param int $qty
+     * @return bool
+     */
     public function getProductExists($product_id, $qty)
     {
         //check product exists in save for later

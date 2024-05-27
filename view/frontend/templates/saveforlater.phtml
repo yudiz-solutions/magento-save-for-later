@@ -1,29 +1,49 @@
-<?php $saveForLater = $block->getSaveForLaterData(); ?>
+<?php
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
+$saveForLater = $block->getSaveForLaterData();
+?>
 
 <div id="saveforlater-container">
-    <div class="savelater-listing-section">
-        <div class="savelater-messages" style="margin-top: 10px;display: none; color: green;" id="savelater-success-messages">
+    <div class="savelater-listing-section">     
+        <div class="savelater-messages" style="margin-top: 10px; display: none; color: green;" 
+             id="savelater-success-messages">
             <div data-ui-id="checkout-cart-validationmessages-message-success"></div>
         </div>
-        <?php
-        foreach ($saveForLater as $saveForLaterData) : ?>
+        <?php foreach ($saveForLater as $saveForLaterData): ?>
             <div class="savelater-product">
                 <?php $product = $block->getProductDataUsingId($saveForLaterData->getProductId()); ?>
                 <div class="savelater-image-box">
-                    <a href="<?= $block->getProductUrl($product['id']); ?>">
-                        <img src="<?= $block->escapeUrl($product['image']); ?>" alt="<?= $block->escapeHtml($product['name']); ?>">
+                    <a href="<?= $escaper->escapeUrl($block->getProductUrl($product['id'])); ?>">
+                        <img src="<?= $escaper->escapeUrl($product['image']); ?>" 
+                             alt="<?= $escaper->escapeHtml($product['name']); ?>">
                     </a>
-                    <h2 class="savelater-item"><?= $block->escapeHtml($product['name']); ?></h2>
+                    <h2 class="savelater-item"><?= $escaper->escapeHtml($product['name']); ?></h2>
                 </div>
-                <div class="savelater-text-box">
-                    <h3 class="savelater-price"><?= $block->escapeHtml($product['formatted_price']); ?></h3>
-                    <label for="savelater-item-quantity-<?= $product['id']; ?>">Quantity:</label>
+                <div class="savelater-text-box
+                ">
+                    <h3 class="savelater-price"><?= $escaper->escapeHtml($product['formatted_price']); ?></h3>
+                    <label for="savelater-item-quantity-<?= $escaper->escapeHtml($product['id']); ?>">Quantity:</label>
                     <div class="quantity-controls">
                         <button type="button" class="quantity-btn decrease">-</button>
-                        <input type="text" id="savelater-item-quantity-<?= $product['id']; ?>" name="item-quantity" class="savelater-item-quantity" value="<?= $block->escapeHtml($saveForLaterData->getQty()); ?>" />
+                        <input type="text" id="savelater-item-quantity-<?= $escaper->escapeHtml($product['id']); ?>" 
+                            name="item-quantity" class="savelater-item-quantity"
+                            value="<?= $escaper->escapeHtml($saveForLaterData->getQty()); ?>" />
                         <button type="button" class="quantity-btn increase">+</button>
                     </div>
-                    <input type="hidden" class="savelater-product-id" value="<?= $product['id']; ?>">
+                    <input type="hidden" class="savelater-product-id" 
+                           value="<?= $escaper->escapeHtml($product['id']); ?>">
                     <button type="button" class="savelater-cart-action savelater-add-item">Add to Cart</button>
                     <button type="button" class="savelater-cart-action savelater-remove-item">Remove</button>
                 </div>
@@ -31,10 +51,9 @@
         <?php endforeach; ?>
     </div>
     <div id="savelater-load-more" style="display: none;">
-        <img src="/pub/static/frontend/Magento/luma/en_US/images/loader-1.gif" alt="Loading..." />
+        <img src="<?= $escaper->escapeUrl($block->getLoaderImageUrl()); ?>" alt="Loading..." />
         <span>Loading...</span>
     </div>
-
 </div>
 
 <script>
@@ -45,7 +64,7 @@
                     var action = event.target.classList.contains('savelater-add-item') ? 'add' : 'remove';
                     var productId = event.target.parentNode.querySelector('.savelater-product-id').value;
                     var quantity = event.target.parentNode.querySelector('.savelater-item-quantity').value;
-                    var formurl = '<?php echo $this->getUrl('saveforlater/cart/addtocart'); ?>';
+                    var formurl = '<?= $escaper->escapeUrl($block->getUrl('saveforlater/cart/managecart')); ?>';
                     var messageType = action === 'add' ? 'Adding to cart...' : 'Removing from cart...';
 
                     jQuery.ajax({
@@ -131,7 +150,7 @@
             isLoading = true;
 
             $.ajax({
-                url: '<?php echo $this->getUrl('saveforlater/customer/loadmore'); ?>',
+                url: '<?= $escaper->escapeUrl($block->getUrl('saveforlater/customer/loadmore')); ?>',
                 type: 'POST',
                 data: {
                     page: page
