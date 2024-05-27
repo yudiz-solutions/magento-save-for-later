@@ -1,6 +1,5 @@
 # Save For Later Extension for Magento 2
 
-ChatGPT
 The "Save For Later" extension for Magento 2 makes shopping easier. It lets customers save products they like but aren't ready to buy yet, similar to what you see on Amazon. This way, shoppers can keep track of what they're interested in without having to make a purchase right away. By adding this feature to your store, you're giving customers more flexibility and making it easier for them to shop at their own pace. It's a great way to keep customers happy and coming back to your store for more.
 
 For the store owner,they can make make their customers happier, understand what they like, and stop them from leaving items in their cart without buying them. This all adds up to more sales.
