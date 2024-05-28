@@ -15,7 +15,9 @@
 $saveForLater = $block->getSaveForLaterData();
 
 if (empty($saveForLater->getData())) {
-    echo '<div class="message info empty"><div>' . __('You have no items in your save for later list.') . '</div></div>';
+    echo '<div class="message info empty"><div>' .
+             $escaper->escapeHtml(__('You have no items in your save for later list.')) .
+         '</div></div>';
     return;
 }
 ?>
@@ -88,7 +90,10 @@ if (empty($saveForLater->getData())) {
                                 showMessage(transport.message);
                                 //this product removed from save for later
                                 event.target.closest('.savelater-product').remove();
-                                $('.savelater-product').length > 0 ? '' : $('#saveforlater-container').html('<div class="message info empty"><div>' + '<?= $escaper->escapeHtml(__('You have no items in your save for later list.')) ?>' + '</div></div>');
+                                $('.savelater-product').length > 0 ? '' : $('#saveforlater-container').html(
+                                    '<div class="message info empty"><div>' + 
+                                    '<?= $escaper->escapeHtml(__('You have no items in your save for later list.')) ?>'
+                                    + '</div></div>');
 
                             } else if (transport.errors) {
                                 Swal.fire({
