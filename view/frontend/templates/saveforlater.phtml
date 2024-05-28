@@ -13,6 +13,11 @@
  */
 
 $saveForLater = $block->getSaveForLaterData();
+
+if (empty($saveForLater->getData())) {
+    echo '<div class="message info empty"><div>' . __('You have no items in your save for later list.') . '</div></div>';
+    return;
+}
 ?>
 
 <div id="saveforlater-container">
@@ -83,6 +88,7 @@ $saveForLater = $block->getSaveForLaterData();
                                 showMessage(transport.message);
                                 //this product removed from save for later
                                 event.target.closest('.savelater-product').remove();
+                                $('.savelater-product').length > 0 ? '' : $('#saveforlater-container').html('<div class="message info empty"><div>' + '<?= $escaper->escapeHtml(__('You have no items in your save for later list.')) ?>' + '</div></div>');
 
                             } else if (transport.errors) {
                                 Swal.fire({
@@ -160,6 +166,12 @@ $saveForLater = $block->getSaveForLaterData();
                 },
                 success: function(response) {
                     if (response.success) {
+                        if (response.html == false && !response.hasMoreData) {
+                            $(window).off('scroll');
+                            $('#savelater-load-more').hide();
+                            isLoading = false;
+                            return;
+                        }
                         var newProducts = $(response.html).filter('.savelater-product');
                         $('.savelater-listing-section').append(newProducts);
                         isLoading = false;

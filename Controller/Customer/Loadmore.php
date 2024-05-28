@@ -89,6 +89,14 @@ class Loadmore extends Action
 
         $block->setData('save_for_later_collection', $saveForLaterCollection);
 
+        if ($saveForLaterCollection->getSize() <= 6) {
+            return $this->jsonFactory->create()->setData([
+                'success' => true,
+                'html' => false,
+                'hasMoreData' => $hasMoreData
+            ]);
+        }
+
         return $this->jsonFactory->create()->setData([
             'success' => true,
             'html' => $block->toHtml(),

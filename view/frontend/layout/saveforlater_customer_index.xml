@@ -12,7 +12,7 @@
  * @copyright   Copyright (c) 2024 Yudiz (https://www.Yudiz.com/)
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
-    <head ifconfig="saveforlater/general/enable">
+    <head>
         <css src="Yudiz_SaveForLater::css/saveforlater.css" />
     </head>
     <update handle="customer_account"/>
