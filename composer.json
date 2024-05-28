@@ -1,0 +1,32 @@
+{
+    "name": "yudiz/saveforlater",
+    "description": "Magento 2 Save For Later",
+    "type": "magento2-module",
+    "require": {
+        "yudiz/module-core": "^1.0.0"
+    },
+    "version": "1.1.0",
+    "authors": [
+        {
+            "name": "Yudiz Solutions Ltd.",
+            "email": "support@yudiz.com",
+            "homepage": "https://www.yudiz.com/",
+            "role": "Magento Developer"
+        }
+    ],
+    "suggest": {
+    },
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Yudiz\\SaveForLater\\": ""
+        }
+    },
+    "minimum-stability": "stable"
+}
