@@ -1,8 +1,10 @@
 # Save For Later Extension for Magento 2
 
-The "Save For Later" extension for Magento 2 makes shopping easier. It lets customers save products they like but aren't ready to buy yet, similar to what you see on Amazon. This way, shoppers can keep track of what they're interested in without having to make a purchase right away. By adding this feature to your store, you're giving customers more flexibility and making it easier for them to shop at their own pace. 
+The "Save for Later" Extension functions as a personalized wishlist, allowing logged-in customers to earmark products they're interested in but not yet ready to purchase. Much like Amazon's feature, customers can easily add items to this section for future consideration. From here, they have the flexibility to either move products to their cart when ready or remove them from the list altogether, streamlining their shopping experience and ensuring their favorite items are readily accessible.
 
-For the store owner,they can make make their customers happier, understand what they like, and stop them from leaving items in their cart without buying them.
+Admins have seamless control over the "Save for Later" module, with the ability to enable or disable it . Admins can view which products customers have saved, along with the quantity of each item. Furthermore, they can analyze this data through intuitive graphs, such as daily activity metrics, popular product trends, monthly insights, and yearly overviews.
+
+The "Save for Later" module helps admins understand what customers like, so they can make the website better for everyone. This means happier customers and smarter marketing.
 
 ## Features
 
@@ -16,7 +18,7 @@ For the store owner,they can make make their customers happier, understand what 
 You can install the Yudiz Save For Later Extension using one of two methods:
  1. Via Composer 
  2. By downloading it directly from the available source.
-
+ 
 ### 1. Install via composer
 
 Before installing the Yudiz Save For Later Extension, it is necessary to install the Yudiz Core module. You can obtain the Yudiz Core module by using the following code.
@@ -76,7 +78,13 @@ By following these 2 Ways you can easily obtain and install the module. For deta
 
 Login to the **Magento Admin**, navigate to `Yudiz -> Save For Later Configuration `.
 
-#### General Configuration 
+There,You can find two options: configuration, and Save for later Products and Analyzation.
+
+<div>
+    <img src="./ReadmeImages/AdminSaveForLater.png" alt="AdminSaveForLater">
+</div><br/>
+
+#### 1. General Configuration 
 
 - Extension enable : Select Yes/No to enable or disable the module
 
@@ -85,6 +93,24 @@ Login to the **Magento Admin**, navigate to `Yudiz -> Save For Later Configurati
 </div><br/>
 
 Click on "Save", which will save the configuration.
+
+#### 2. Save for later Products and Analyzation 
+
+Here, you can find the option to select different charts to analyze the 'save for later' section for marketing purposes. You can analyze this data through intuitive graphs, such as daily activity metrics, popular product trends, monthly insights, and yearly overviews.
+
+By using these graphs, you can analyze the data in various ways on a daily, monthly, and yearly basis.
+
+Once you choose the graph type, the graph will appear, as shown in the image below.
+<div>
+    <img src="./ReadmeImages/Chart.png" alt="Chart">
+</div><br/>
+
+Furthermore, inside this page, as you scroll down, you'll be able to access a grid for detailed data analysis. Within this section, you can thoroughly examine and interpret the data of the 'save for later' section. This feature proves beneficial for marketing purposes as well, offering valuable insights into consumer behavior and preferences.
+
+<div>
+    <img src="./ReadmeImages/SaveForLaterGrid.png" alt="SaveForLaterGrid">
+</div><br/>
+
 
 ## Frontend 
 
