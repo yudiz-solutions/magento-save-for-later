@@ -1,8 +1,8 @@
 # Save For Later Extension for Magento 2
 
-The "Save for Later" Extension functions as a personalized wishlist, allowing logged-in customers to earmark products they're interested in but not yet ready to purchase. Much like Amazon's feature, customers can easily add items to this section for future consideration. From here, they have the flexibility to either move products to their cart when ready or remove them from the list altogether, streamlining their shopping experience and ensuring their favorite items are readily accessible.
+The "Save For Later" extension for Magento 2 makes shopping easier. It lets customers save products they like but aren't ready to buy yet, similar to what you see on Amazon. This way, shoppers can keep track of what they're interested in without having to make a purchase right away.
 
-Admins have seamless control over the "Save for Later" module, with the ability to enable or disable it . Admins can view which products customers have saved, along with the quantity of each item. Furthermore, they can analyze this data through intuitive graphs, such as daily activity metrics, popular product trends, monthly insights, and yearly overviews.
+By adding this feature to your store, you're giving customers more flexibility and making it easier for them to shop at their own pace. Admins can enable or disable the module And also can view which products customers have saved, along with the quantity of each item. Furthermore, they can analyze this data through intuitive graphs, such as daily activity metrics, popular product trends, monthly insights, and yearly overviews.
 
 The "Save for Later" module helps admins understand what customers like, so they can make the website better for everyone. This means happier customers and smarter marketing.
 
