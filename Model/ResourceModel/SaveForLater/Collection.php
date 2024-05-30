@@ -31,4 +31,16 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             \Yudiz\SaveForLater\Model\ResourceModel\SaveForLater::class
         );
     }
+
+    /**
+     * Set customer ID filter
+     *
+     * @param int $customerId
+     * @return $this
+     */
+    public function setCustomerId($customerId)
+    {
+        $this->addFieldToFilter('user_id', $customerId);
+        return $this;
+    }
 }

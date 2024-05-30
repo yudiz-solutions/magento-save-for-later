@@ -15,5 +15,6 @@
     <menu>
         <add id="Yudiz_SaveForLater::manager" title="Yudiz Save For Later" translate="title" module="Yudiz_SaveForLater" parent="Yudiz_Core::manager" resource="Yudiz_SaveForLater::manager" />  
         <add id="Yudiz_SaveForLater::settings" title="Configuration" module="Yudiz_SaveForLater" sortOrder="30" resource="Yudiz_SaveForLater::settings" action="adminhtml/system_config/edit/section/saveforlater/" parent="Yudiz_SaveForLater::manager"/> 
+        <add id="Yudiz_SaveForLater::show_products" title="Save For Later Products and Analyzation" module="Yudiz_SaveForLater" sortOrder="40" parent="Yudiz_SaveForLater::settings" action="saveforlater/grid" resource="Yudiz_SaveForLater::show_products"/>
     </menu>
 </config>

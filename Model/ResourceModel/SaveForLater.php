@@ -51,6 +51,6 @@ class SaveForLater extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('save_for_later', 'entity_id');
+        $this->_init('yudiz_save_for_later', 'entity_id');
     }
 }

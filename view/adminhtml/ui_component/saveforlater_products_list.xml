@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.Yudiz.com/)
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+      <item name="js_config" xsi:type="array">
+          <item name="provider" xsi:type="string">saveforlater_products_list.saveforlater_products_list_data_source</item>
+          <item name="deps" xsi:type="string">saveforlater_products_list.saveforlater_products_list_data_source</item>
+      </item>
+      <item name="spinner" xsi:type="string">saveforlater_products_list_columns</item>
+    </argument>
+    
+    <dataSource name="saveforlater_products_list_data_source">
+      <argument name="dataProvider" xsi:type="configurableObject">
+        <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+        <argument name="name" xsi:type="string">saveforlater_products_list_data_source</argument>
+        <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+        <argument name="requestFieldName" xsi:type="string">id</argument>
+        <argument name="data" xsi:type="array">
+          <item name="config" xsi:type="array">
+            <item name="update_url" xsi:type="url" path="mui/index/render"/>
+          </item>
+        </argument>
+      </argument>
+      <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+          <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+        </item>
+      </argument>
+    </dataSource>
+
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+                <item name="stickyTmpl" xsi:type="string">ui/grid/sticky/toolbar</item>
+            </item>
+        </argument>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+         <filters name="listing_filters" />
+          <filterSearch name="fulltext">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="provider" xsi:type="string">saveforlater_products_list.saveforlater_products_list_data_source</item>
+                    <item name="chipsProvider" xsi:type="string">saveforlater_products_list.saveforlater_products_list.listing_top.listing_filters_chips</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">saveforlater_products_list.saveforlater_products_list.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.search</item>
+                    </item>
+                </item>
+            </argument>
+        </filterSearch>
+        <massaction name="listing_massaction">  
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">saveforlater_products_list.saveforlater_products_list.saveforlater_products_list_columns.ids</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/tree-massactions</item>
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+            <!-- Mass actions which you want to add in your grid-->
+        </massaction>
+        <paging name="listing_paging">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">   
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">saveforlater_products_list.saveforlater_products_list.listing_top.bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.paging</item>
+                    </item>
+                    <item name="selectProvider" xsi:type="string">saveforlater_products_list.saveforlater_products_list.saveforlater_products_list_columns.ids</item>
+                </item>
+            </argument>
+        </paging>
+    </container>
+    
+    <columns name="saveforlater_products_list_columns">
+      <selectionsColumn name="ids">
+        <argument name="data" xsi:type="array">
+         <item name="config" xsi:type="array">
+           <item name="indexField" xsi:type="string">entity_id</item>
+           <item name="sorting" xsi:type="string">desc</item>
+           <item name="sortOrder" xsi:type="number">0</item>
+         </item>
+        </argument>
+      </selectionsColumn>
+      
+      <!-- Entity Id Column -->
+      <column name="entity_id">
+       <argument name="data" xsi:type="array">
+         <item name="config" xsi:type="array">
+           <item name="filter" xsi:type="string">text</item>
+           <item name="label" xsi:type="string" translate="true">Id</item>
+           <item name="sortOrder" xsi:type="number">5</item>
+         </item>
+       </argument>
+      </column>
+
+      <!-- User Name Column -->
+      <column name="user_id" class="Yudiz\SaveForLater\Ui\Component\Listing\Grid\Column\CustomerName">
+          <argument name="data" xsi:type="array">
+              <item name="config" xsi:type="array">
+                  <item name="filter" xsi:type="string">text</item>
+                  <item name="label" xsi:type="string" translate="true">Customer Name</item>
+                  <item name="sortOrder" xsi:type="number">10</item>
+              </item>
+          </argument>
+      </column>
+
+      <!-- Product Name Column -->
+      <column name="product_id" class="Yudiz\SaveForLater\Ui\Component\Listing\Grid\Column\ProductName">
+          <argument name="data" xsi:type="array">
+              <item name="config" xsi:type="array">
+                  <item name="filter" xsi:type="string">text</item>
+                  <item name="label" xsi:type="string" translate="true">Product Name</item>
+                  <item name="sortOrder" xsi:type="number">15</item>
+              </item>
+          </argument>
+      </column>
+
+      <!-- Product Qty Column -->
+      <column name="qty">
+       <argument name="data" xsi:type="array">
+         <item name="config" xsi:type="array">
+           <item name="filter" xsi:type="string">text</item>
+           <item name="label" xsi:type="string" translate="true">Product Qty</item>
+           <item name="sortOrder" xsi:type="number">20</item>
+         </item>
+       </argument>
+      </column>
+   
+      <!-- Created At  Column -->
+      <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" >
+       <argument name="data" xsi:type="array">
+         <item name="config" xsi:type="array">
+           <item name="filter" xsi:type="string">dateRange</item>
+           <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+           <item name="dataType" xsi:type="string">date</item>
+           <item name="label" xsi:type="string" translate="true">Created At</item>
+           <item name="sortOrder" xsi:type="number">25</item>
+         </item>
+       </argument>
+      </column>
+
+      <!-- Updated At Column -->
+      <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date" >
+       <argument name="data" xsi:type="array">
+         <item name="config" xsi:type="array">
+           <item name="filter" xsi:type="string">dateRange</item>
+           <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+           <item name="dataType" xsi:type="string">date</item>
+           <item name="label" xsi:type="string" translate="true">Update At</item>
+           <item name="sortOrder" xsi:type="number">30</item>
+         </item>
+       </argument>
+      </column>
+          
+  </columns>
+</listing>

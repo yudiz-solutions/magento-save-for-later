@@ -102,7 +102,7 @@ class SaveForLater extends Template
         if ($this->getSaveForLaterData()) {
             $pager = $this->getLayout()->createBlock(
                 \Magento\Theme\Block\Html\Pager::class,
-                'custom.pager.name'
+                'saveforlater.pager.name'
             )
                 ->setAvailableLimit($page_size)
                 ->setShowPerPage(true)
@@ -134,7 +134,7 @@ class SaveForLater extends Template
         $page = ($this->getRequest()->getParam('p')) ? $this->getRequest()->getParam('p') : 1;
         $pageSize = ($this->getRequest()->getParam('limit')) ? $this->getRequest()->getParam('limit') : 6;
 
-        // Get custom collection
+        // Get saveforlater collection
         $customerId = $this->customerSession->getCustomer()->getId();
         $collections = $this->collection->create();
         $collections->addFieldToFilter('user_id', $customerId);

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.Yudiz.com/)
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/layout_generic.xsd">
+    <container name="root" label="Root">
+        <block class="Yudiz\SaveForLater\Block\Adminhtml\Edit\Tab\View\SaveForLaterGrid" name="saveforlater_tab"/>
+    </container>
+</layout>

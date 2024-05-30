@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.Yudiz.com/)
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Yudiz\SaveForLater\Api\Data\ExtensionInterface" type="Yudiz\SaveForLater\Model\SaveForLater" />
+    
+    <virtualType name="Yudiz\SaveForLater\Model\ResourceModel\SaveForLater\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">yudiz_save_for_later</argument>
+            <argument name="resourceModel" xsi:type="string">Yudiz\SaveForLater\Model\ResourceModel\SaveForLater</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="saveforlater_products_list_data_source" xsi:type="string">Yudiz\SaveForLater\Model\ResourceModel\SaveForLater\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

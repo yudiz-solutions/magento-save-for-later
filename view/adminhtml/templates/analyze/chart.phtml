@@ -1,0 +1,182 @@
+<?php
+/**
+ * Yudiz
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to a newer
+ * version in the future.
+ *
+ * @category    Yudiz
+ * @package     Yudiz_SaveForLater
+ * @copyright   Copyright (c) 2024 Yudiz (https://www.yudiz.com/)
+ */
+
+/**
+ * @var \Yudiz\SaveForLater\Block\CustomerAnalyzeChart $block
+ */
+$customerAnalyzeDataPerDay = $block->getCustomerAnalyzeDataPerDay();
+$mostSavedProducts = $block->getMostSavedProductsByCustomers();
+$monthlyTrendsData = $block->getMonthlyTrendsData();
+$yearlyData = $block->getYearlyData();
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <div class="dashboard-diagram-switcher">
+        <label for="chart_type" class="label"><?= $escaper->escapeHtml(__('Select Chart Type:')) ?></label>
+        <select name="chart_type" id="chart_type" class="admin__control-select" onchange="changeChartType(this);">
+            <option value="customerAnalyzeDataPerDayChart">
+                <?= $escaper->escapeHtml(__('Customers using "Save for Later" Section by Date')) ?>
+            </option>
+            <option value="mostSavedProductsChart">
+                <?= $escaper->escapeHtml(__('Most Saved Products by Customers')) ?>
+            </option>
+            <option value="monthlyTrendsChart">
+                <?= $escaper->escapeHtml(__('Monthly Trends of Save for Later')) ?>
+            </option>
+            <option value="yearlyChart"><?= $escaper->escapeHtml(__('Yearly Record')) ?></option>
+        </select>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-container" id="customerAnalyzeDataPerDayChart"></div>
+        <div class="chart-container" id="mostSavedProductsChart"></div>
+        <div class="chart-container" id="monthlyTrendsChart"></div>
+        <div class="chart-container" id="yearlyChart"></div>
+    </div>
+
+    <script>
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            // Set consistent chart dimensions
+            var chartWidth = 1200;
+            var chartHeight = 800;
+
+            // Customer Analyze per Day Chart
+            var customerData = new google.visualization.DataTable();
+            customerData.addColumn('string', 'Date');
+            customerData.addColumn('number', 'Customer');
+            <?php foreach ($customerAnalyzeDataPerDay as $customer): ?>
+                customerData.addRow([
+                    '<?= $escaper->escapeJs(date('m/d/Y', strtotime($customer['created_date']))) ?>',
+                    <?= (int)$customer['customer_count'] ?>
+                ]);
+            <?php endforeach; ?>
+
+            var customerOptions = {
+                title: 'Customers using "Save for Later" Section by Date',
+                width: chartWidth,
+                height: chartHeight,
+                hAxis: { title: 'Date' },
+                vAxis: { title: 'Customers Count' },
+                chartType: 'bar',
+                orientation: 'horizontal'
+            };
+
+            var customerChart = new google.visualization.BarChart(
+                document.getElementById('customerAnalyzeDataPerDayChart')
+            );
+            customerChart.draw(customerData, customerOptions);
+
+            // Most Saved Products Chart
+            var productData = new google.visualization.DataTable();
+            productData.addColumn('string', 'Product Name');
+            productData.addColumn('number', 'Customer');
+            <?php foreach ($mostSavedProducts as $product): ?>
+                productData.addRow([
+                    '<?= $escaper->escapeJs($product['product_name']) ?>',
+                    <?= (int)$product['customer_count'] ?>
+                ]);
+            <?php endforeach; ?>
+
+            var productOptions = {
+                title: 'Most Saved Products by Customers',
+                width: chartWidth,
+                height: chartHeight,
+                hAxis: { title: 'Product Name' },
+                vAxis: { title: 'Customers Count' },
+                chartType: 'bar',
+                orientation: 'horizontal'
+            };
+
+            var productChart = new google.visualization.BarChart(document.getElementById('mostSavedProductsChart'));
+            productChart.draw(productData, productOptions);
+
+            // Monthly Trends Chart
+            var monthlyData = new google.visualization.DataTable();
+            monthlyData.addColumn('string', 'Month');
+            monthlyData.addColumn('number', 'Customer');
+            <?php foreach ($monthlyTrendsData as $monthlyTrend): ?>
+                monthlyData.addRow([
+                    '<?= $escaper->escapeJs($monthlyTrend['month']) ?>',
+                    <?= (int)$monthlyTrend['save_count'] ?>
+                ]);
+            <?php endforeach; ?>
+
+            var monthlyOptions = {
+                title: 'Monthly Trends of Save for Later',
+                width: chartWidth,
+                height: chartHeight,
+                hAxis: { title: 'Month' },
+                vAxis: { title: 'Customers Count' },
+                chartType: 'line',
+                orientation: 'horizontal'
+            };
+
+            var monthlyChart = new google.visualization.LineChart(document.getElementById('monthlyTrendsChart'));
+            monthlyChart.draw(monthlyData, monthlyOptions);
+
+            // Yearly Record Chart
+            var yearlyData = new google.visualization.DataTable();
+            yearlyData.addColumn('string', 'Year');
+            yearlyData.addColumn('number', 'Customers Count');
+            <?php foreach ($yearlyData as $year): ?>
+                yearlyData.addRow([
+                    '<?= $escaper->escapeJs($year['year']) ?>',
+                    <?= (int)$year['customer_count'] ?>
+                ]);
+            <?php endforeach; ?>
+
+            var yearlyOptions = {
+                title: 'Yearly Record',
+                width: chartWidth,
+                height: chartHeight,
+                hAxis: { title: 'Year' },
+                vAxis: { title: 'Customers Count' },
+                chartType: 'bar',
+                orientation: 'horizontal'
+            };
+
+            var yearlyChart = new google.visualization.BarChart(document.getElementById('yearlyChart'));
+            yearlyChart.draw(yearlyData, yearlyOptions);
+
+            // Hide all charts except "customerAnalyzeDataPerDayChart" on initial load
+            var chartContainers = document.querySelectorAll('.chart-container');
+            chartContainers.forEach(function(container) {
+                if (container.id !== 'customerAnalyzeDataPerDayChart') {
+                    container.style.display = 'none';
+                }
+            });
+        }
+
+        function changeChartType(selectElement) {
+            var chartType = selectElement.value;
+            var chartContainers = document.querySelectorAll('.chart-container');
+
+            chartContainers.forEach(function(container) {
+                if (container.id === chartType) {
+                    container.style.display = 'block';
+                } else {
+                    container.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
