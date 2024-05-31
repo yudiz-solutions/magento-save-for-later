@@ -18,6 +18,14 @@ define([
         initialize: function () {
             this._super();
             this.checkDisplayButton();
+            this.initMiniCartObserver();
+
+              // Listen for customer login event
+            $(document).on('customer-data-reload', function (event, sections) {
+                if (sections.includes('customer')) {
+                    this.updateMiniCart();
+                }
+            }.bind(this));
         },
 
         checkDisplayButton: function () {
@@ -104,6 +112,23 @@ define([
             }).fail(function (error) {
                 messageList.addErrorMessage({ message: JSON.stringify(error) });
             });
-        }
+        },
+
+        initMiniCartObserver: function () {
+            var self = this;
+            var cartData = customerData.get('cart');
+            cartData.subscribe(function () {
+                self.checkDisplayButton();
+            });
+
+            // Initial call to handle page refresh
+            self.checkDisplayButton();
+        },
+
+        updateMiniCart: function () {
+            var sections = ['cart'];
+            customerData.invalidate(sections);
+            customerData.reload(sections, true);
+        },
     });
 });
