@@ -136,10 +136,12 @@ define([
          * - Only triggers if the customer section is included in the reload
          */
         updateMiniCart: function (event, sections) {
-            if (sections.includes('customer')) {
-                const sectionsToUpdate = ['cart'];
-                customerData.invalidate(sectionsToUpdate);
-                customerData.reload(sectionsToUpdate, true);
+            if (typeof sections !== 'undefined'){
+                if (sections.includes('cart')) {
+                    const sectionsToUpdate = ['cart'];
+                    customerData.invalidate(sectionsToUpdate);
+                    customerData.reload(sectionsToUpdate, true);
+                }
             }
         },
     });
