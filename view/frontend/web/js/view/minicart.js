@@ -15,49 +15,52 @@ define([
     return Component.extend({
         isDisplayButton: ko.observable(false),
 
+        /**
+         * Initialize the component
+         * - Sets up an observer for minicart changes
+         * - Listens for customer data reload events
+         */
         initialize: function () {
             this._super();
-            this.checkDisplayButton();
             this.initMiniCartObserver();
-
-              // Listen for customer login event
-            $(document).on('customer-data-reload', function (event, sections) {
-                if (sections.includes('customer')) {
-                    this.updateMiniCart();
-                }
-            }.bind(this));
+            $(document).on('customer-data-reload', this.updateMiniCart.bind(this));
         },
 
+        /**
+         * Checks if the button should be displayed
+         * - Calls isModuleEnabled and isLoggedInCustomer
+         * - Sets isDisplayButton observable based on the results
+         */
         checkDisplayButton: function () {
-            var self = this;
-            $.when(self.isModuleEnabled(), self.isLoggedInCustomer()).then(function (isModuleEnabled, isLoggedIn) {
-                self.isDisplayButton(isModuleEnabled && isLoggedIn);
+            $.when(this.isModuleEnabled(), this.isLoggedInCustomer()).then((isModuleEnabled, isLoggedIn) => {
+                this.isDisplayButton(isModuleEnabled && isLoggedIn);
             });
         },
 
+        /**
+         * Checks if the customer is logged in
+         * - Returns true if the customer has a first name (indicating they are logged in)
+         */
         isLoggedInCustomer: function () {
-            var customer = customerData.get('customer')();
-            if (customer.firstname !== undefined && customer.firstname !== null && customer.firstname !== '') {
-                return true;
-            } else {
-                return false;
-            }
+            const customer = customerData.get('customer')();
+            return !!customer.firstname;
         },
 
+        /**
+         * Checks if the module is enabled
+         * - Makes an AJAX call to the server to check module status
+         * - Returns a promise that resolves to true if the module is enabled, false otherwise
+         */
         isModuleEnabled: function () {
-            var serviceUrl = url.build('saveforlater/index/isModuleEnabled');
-            return storage.get(serviceUrl).then(function (response) {
+            const serviceUrl = url.build('saveforlater/index/isModuleEnabled');
+            return storage.get(serviceUrl).then((response) => {
                 if (response.success) {
-                    if (response.isModuleEnabled === '1') {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return response.isModuleEnabled === '1';
                 } else {
                     messageList.addErrorMessage({ message: 'Error checking module status: ' + response.message });
                     return false;
                 }
-            }, function (error) {
+            }).fail((error) => {
                 messageList.addErrorMessage({ message: 'Error checking module status: ' + JSON.stringify(error) });
                 return false;
             });
@@ -114,21 +117,30 @@ define([
             });
         },
 
+        /**
+         * Initializes the observer for minicart changes
+         * - Subscribes to changes in the cart data
+         * - Calls checkDisplayButton whenever the cart data changes
+         */
         initMiniCartObserver: function () {
-            var self = this;
-            var cartData = customerData.get('cart');
-            cartData.subscribe(function () {
-                self.checkDisplayButton();
-            });
+            const cartData = customerData.get('cart');
+            cartData.subscribe(this.checkDisplayButton.bind(this));
 
             // Initial call to handle page refresh
-            self.checkDisplayButton();
+            this.checkDisplayButton();
         },
 
-        updateMiniCart: function () {
-            var sections = ['cart'];
-            customerData.invalidate(sections);
-            customerData.reload(sections, true);
+        /**
+         * Updates the minicart data
+         * - Invalidates and reloads the cart section of the customer data
+         * - Only triggers if the customer section is included in the reload
+         */
+        updateMiniCart: function (event, sections) {
+            if (sections.includes('customer')) {
+                const sectionsToUpdate = ['cart'];
+                customerData.invalidate(sectionsToUpdate);
+                customerData.reload(sectionsToUpdate, true);
+            }
         },
     });
 });
