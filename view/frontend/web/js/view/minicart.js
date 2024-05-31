@@ -23,8 +23,6 @@ define([
         checkDisplayButton: function () {
             var self = this;
             $.when(self.isModuleEnabled(), self.isLoggedInCustomer()).then(function (isModuleEnabled, isLoggedIn) {
-                messageList.addSuccessMessage({ message: "isModuleEnabled: " + isModuleEnabled });
-                messageList.addSuccessMessage({ message: "isLoggedIn: " + isLoggedIn });
                 self.isDisplayButton(isModuleEnabled && isLoggedIn);
             });
         },
