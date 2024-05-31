@@ -23,8 +23,8 @@ define([
         checkDisplayButton: function () {
             var self = this;
             $.when(self.isModuleEnabled(), self.isLoggedInCustomer()).then(function (isModuleEnabled, isLoggedIn) {
-                console.log("isModuleEnabled:", isModuleEnabled);
-                console.log("isLoggedIn:", isLoggedIn);
+                messageList.addSuccessMessage({ message: "isModuleEnabled: " + isModuleEnabled });
+                messageList.addSuccessMessage({ message: "isLoggedIn: " + isLoggedIn });
                 self.isDisplayButton(isModuleEnabled && isLoggedIn);
             });
         },
@@ -48,11 +48,11 @@ define([
                         return false;
                     }
                 } else {
-                    console.log('Error checking module status:', response.message);
+                    messageList.addErrorMessage({ message: 'Error checking module status: ' + response.message });
                     return false;
                 }
             }, function (error) {
-                console.log('Error checking module status:', error);
+                messageList.addErrorMessage({ message: 'Error checking module status: ' + JSON.stringify(error) });
                 return false;
             });
         },
@@ -104,7 +104,7 @@ define([
                     }
                 }
             }).fail(function (error) {
-                console.log(JSON.stringify(error));
+                messageList.addErrorMessage({ message: JSON.stringify(error) });
             });
         }
     });
